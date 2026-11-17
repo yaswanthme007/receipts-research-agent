@@ -17,6 +17,7 @@ from .evidence import (
     domain_of,
     fence_untrusted,
     find_quote,
+    iso_date,
     scan_injection,
     select_sources,
     text_fragment_url,
@@ -239,7 +240,7 @@ class Researcher:
                             domain=domain_of(url),
                             snippet=r.get("content") or "",
                             score=float(r.get("score") or 0.0),
-                            published_date=r.get("published_date"),
+                            published_date=iso_date(r.get("published_date")),
                             query=sq_id if keep_query_tag else query,
                         )
                     )

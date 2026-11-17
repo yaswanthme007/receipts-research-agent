@@ -23,6 +23,21 @@ def canonical_url(url: str) -> str:
     return urlunsplit(("https", host, path, query, ""))
 
 
+def iso_date(value: str | None) -> str | None:
+    """Tavily dates arrive as RFC 2822 ('Tue, 31 Mar 2026 00:00:00 GMT') or ISO. Return YYYY-MM-DD."""
+    if not value:
+        return None
+    from datetime import datetime
+    from email.utils import parsedate_to_datetime
+
+    for parse in (parsedate_to_datetime, lambda v: datetime.fromisoformat(v.replace("Z", "+00:00"))):
+        try:
+            return parse(value).date().isoformat()
+        except (TypeError, ValueError, IndexError):
+            continue
+    return None
+
+
 def domain_of(url: str) -> str:
     host = (urlsplit(url).hostname or "").lower()
     return host[4:] if host.startswith("www.") else host
