@@ -98,6 +98,29 @@ _Live example coming after first real run._
 - **All claims fail verification:** same result. Nothing unverified is presented as an answer.
 - **Tool failure** (Tavily down or bad key): **TOOL FAILURE** with the error. Token Factory overload switches to the fallback model, and the trace shows it.
 
+## Evaluation: does checking citations actually help?
+
+We compare Receipts against the **official hackathon template agent**: one Tavily search, one Token Factory call, and `[n]` citations. Both run on the same questions, and **one independent judge** grades both.
+
+- **Questions** ([eval/questions.jsonl](eval/questions.jsonl)): 12 answerable questions (current events, docs, comparisons) and 3 that **can't be answered** (a non-public figure, a product that doesn't exist, a made-up benchmark). For the last three, the right behavior is to decline.
+- **Judge:** a different model from Receipts' own checker (`NEBIUS_MODEL_JUDGE`, defaulting to the smart model), with a different prompt. It reads every cited page itself through Tavily Extract. For each claim it decides whether the cited page establishes it. As in Receipts, a grade only counts if the judge's quoted sentence is **actually on the page**, and both systems are held to the same rule.
+- **Metrics:**
+  - share of claims fully supported by their cited page
+  - unsupported or contradicted claims shown to the user
+  - factual sentences with no citation
+  - whether the system declined the unanswerable questions, or wrongly declined answerable ones
+  - time, tokens and Tavily credits per question
+- **Check the judge yourself:** every judged claim is written to `judged.csv` with the quote the judge found and the page URL, plus an empty column for your own verdict.
+
+```bash
+python eval/run_eval.py              # all 15 questions (~15-25 Tavily credits per question in total)
+python eval/run_eval.py --limit 5    # quicker
+```
+
+Results: _first run pending_
+
+**Known limits:** an LLM judge can be wrong, so spot-check `judged.csv`. Receipts already filters its claims with a similar check, so it should score well on support rate. The more interesting numbers are how many bad claims the baseline shows, and whether each system declines the unanswerable questions. Pages that can't be read are reported separately and not counted.
+
 ## Project layout
 
 ```
@@ -112,6 +135,8 @@ src/receipts/search.py    Tavily client: search + extract, retries, credit track
 src/receipts/prompts.py   prompts + JSON schemas (trust boundary in every web-facing prompt)
 src/receipts/render.py    Markdown report
 scripts/doctor.py         setup checker
+src/receipts/evaluation.py  template baseline, independent judge, metrics
+eval/run_eval.py          baseline vs Receipts evaluation; eval/questions.jsonl
 tests/                    offline tests with fake Token Factory + Tavily
 ```
 

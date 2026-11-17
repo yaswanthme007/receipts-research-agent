@@ -1,0 +1,15 @@
+{"id": "q01", "type": "current", "question": "Which company acquired Tavily in 2026, and what was the reported deal value?"}
+{"id": "q02", "type": "docs", "question": "What is the base URL of the Nebius Token Factory OpenAI-compatible API, and how do you list available models?"}
+{"id": "q03", "type": "current", "question": "Which models did Nebius Token Factory deprecate in November 2026, and what replacements were recommended?"}
+{"id": "q04", "type": "docs", "question": "What endpoints does the Tavily API offer, and how many credits does an advanced search cost?"}
+{"id": "q05", "type": "docs", "question": "What are the main new features in Python 3.14?"}
+{"id": "q06", "type": "comparison", "question": "What are the main differences between PostgreSQL 18 and PostgreSQL 17?"}
+{"id": "q07", "type": "current", "question": "When and where is ODSC AI West 2026 held?"}
+{"id": "q08", "type": "docs", "question": "What do URL text fragments (#:~:text=) do, and which browsers support them?"}
+{"id": "q09", "type": "current", "question": "Which Node.js version is the current Active LTS release, and when does it reach end of life?"}
+{"id": "q10", "type": "docs", "question": "What changed in the Rust 2024 edition, and when was it released?"}
+{"id": "q11", "type": "current", "question": "How much does GitHub Copilot Business cost per user per month?"}
+{"id": "q12", "type": "comparison", "question": "How do the context window sizes of Llama 3.3 70B Instruct and Qwen3-30B-A3B compare?"}
+{"id": "u01", "type": "unanswerable", "question": "What was the exact revenue of Nebius Group's Tavily unit in October 2026?"}
+{"id": "u02", "type": "unanswerable", "question": "What is the release date of PostgreSQL 25?"}
+{"id": "u03", "type": "unanswerable", "question": "What score did the Zorblax Quantum 9 processor get on the 2026 HyperMark benchmark?"}
