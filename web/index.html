@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Receipts</title>
+  <meta name="description" content="Research answers where every claim is checked against the page it cites.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header class="masthead">
+    <div class="brand">
+      <span class="wordmark"><mark class="hl hl-verified">Receipts</mark></span>
+      <p class="tagline">Research answers where every claim is checked against the page it cites.</p>
+    </div>
+    <p class="health" id="health" hidden></p>
+  </header>
+
+  <main>
+    <section class="ask" aria-label="Ask">
+      <div class="modes" role="radiogroup" aria-label="Mode">
+        <label><input type="radio" name="mode" value="research" checked> Research a question</label>
+        <label><input type="radio" name="mode" value="audit"> Check someone's text</label>
+      </div>
+      <form id="ask-form" class="ask-form">
+        <label for="q" class="sr-only">Your question</label>
+        <textarea id="q" rows="2" required minlength="3"
+          placeholder="Ask something where a wrong answer would cost you"></textarea>
+        <button type="submit" id="go">Research</button>
+      </form>
+      <div class="examples" id="examples" aria-label="Example questions"></div>
+      <p class="replay-line"><button type="button" class="text-button" id="replay">Replay the last run</button>
+        <span class="muted">Re-streams a saved run without new API calls.</span></p>
+    </section>
+
+    <div class="workspace">
+      <article class="sheet" id="sheet" aria-live="polite">
+        <div class="empty">
+          <h1>Ask a question. Get an answer you can check.</h1>
+          <p>Receipts searches the live web, writes an answer as separate claims, then reads every cited page and
+            keeps a claim only if it finds the sentence that backs it up.</p>
+          <ul class="legend" aria-label="What the highlights mean">
+            <li><mark class="hl hl-verified">Verified</mark> the quote was found on the page</li>
+            <li><mark class="hl hl-partial">Partly verified</mark> the page backs part of it</li>
+            <li><mark class="hl hl-conflict">Sources disagree</mark> another page says otherwise</li>
+            <li><s class="struck">Removed</s> no page backed it up</li>
+          </ul>
+        </div>
+      </article>
+
+      <aside class="log" aria-label="Research log">
+        <div class="log-head">
+          <h2>Research log</h2>
+          <span class="log-state" id="log-state">Idle</span>
+        </div>
+        <ol id="log" class="log-list"></ol>
+        <dl class="meter" id="meter"></dl>
+      </aside>
+    </div>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

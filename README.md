@@ -67,8 +67,11 @@ source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 cp .env.example .env               # add your keys. .env is git-ignored
 python scripts/doctor.py           # checks keys, lists models, makes 1 test call each
-python src/agent.py "Your research question here"
+python src/app.py                  # web app at http://127.0.0.1:8000
+python src/agent.py "Your research question here"   # or use the CLI
 ```
+
+**Web app:** type a question, or switch to *Check someone's text* to audit a paragraph. The research log streams every Tavily and Token Factory call live. In the answer, verified claims are highlighted, and each citation number opens the source page **scrolled to and highlighting the quoted sentence**. *Replay the last run* re-streams a saved run without spending credits. With no saved runs, it replays a clearly labelled fictional sample (`tests/fixtures/sample_run.json`) that is only used to develop the UI.
 
 Audit mode:
 
@@ -98,6 +101,9 @@ _Live example coming after first real run._
 ## Project layout
 
 ```
+src/app.py                web app entry (FastAPI + Uvicorn)
+src/receipts/server.py    streaming API: /api/run (NDJSON trace + result), /api/replay, /api/health
+web/                      single-page UI (no build step): index.html, styles.css, app.js
 src/agent.py              CLI
 src/receipts/pipeline.py  research loop: plan → search → select → draft → verify → refine → finalize
 src/receipts/evidence.py  dedupe, ranking, injection scan, passage picking, quote matching, highlight links
