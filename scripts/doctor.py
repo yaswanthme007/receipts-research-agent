@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+from dataclasses import replace
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
@@ -37,12 +38,24 @@ def main() -> int:
     missing = s.missing_keys()
     for key in ("NEBIUS_API_KEY", "TAVILY_API_KEY"):
         print(f"{BAD if key in missing else OK} {key} {'missing' if key in missing else 'set'}")
+
+    tracer = Tracer()
+    if "TAVILY_API_KEY" in missing:
+        failures += 1
+    elif not args.models:
+        try:
+            # Basic depth = 1 credit.
+            rows = WebSearch(replace(s, search_depth="basic"), tracer).search("Nebius Token Factory", max_results=2)
+            print(f"{OK} Tavily search works -> {len(rows)} results, e.g. {rows[0]['url'] if rows else '-'}")
+        except Exception as e:  # noqa: BLE001
+            failures += 1
+            print(f"{BAD} Tavily search failed: {str(e)[:200]}")
+
     if "NEBIUS_API_KEY" in missing:
-        print("Add keys to .env (see .env.example), then re-run.")
+        print("\nNEBIUS_API_KEY missing: Token Factory checks skipped. Add it to .env and re-run.")
         return 1
     print(f"{OK} base URL: {s.base_url}")
 
-    tracer = Tracer()
     llm = LLM(s, tracer)
     try:
         catalog = llm.fetch_catalog()
@@ -88,16 +101,6 @@ def main() -> int:
         except Exception as e:  # noqa: BLE001
             failures += 1
             print(f"{BAD} {tier} model call failed: {type(e).__name__}: {str(e)[:200]}")
-
-    if "TAVILY_API_KEY" in missing:
-        failures += 1
-    else:
-        try:
-            rows = WebSearch(s, tracer).search("Nebius Token Factory", max_results=2)
-            print(f"{OK} Tavily search works -> {len(rows)} results, e.g. {rows[0]['url'] if rows else '-'}")
-        except Exception as e:  # noqa: BLE001
-            failures += 1
-            print(f"{BAD} Tavily search failed: {str(e)[:200]}")
 
     u = tracer.usage
     print(f"\nUsed {u.prompt_tokens + u.completion_tokens} tokens, {u.tavily_credits:g} Tavily credits.")
